@@ -1,16 +1,30 @@
 import Image from "next/image";
+import Link from "next/link";
+import FavoriteButton from "../FavoriteButton";
 
-export default function ArtPiecePreview({ artPiece }) {
+export default function ArtPiecePreview({
+  artPiece,
+  isFavorite,
+  onToggleFavorite,
+}) {
   return (
     <div>
       <h2>{artPiece.name}</h2>
       <p>by {artPiece.artist}</p>
-      <Image
-        src={artPiece.imageSource}
-        width={artPiece.dimensions.width / 4}
-        height={artPiece.dimensions.height / 4}
-        alt={artPiece.name}
-      />
+      <Link href={`/art-pieces/${artPiece.slug}`}>
+        <Image
+          src={artPiece.imageSource}
+          width={480}
+          height={608}
+          alt={artPiece.name}
+        />
+      </Link>
+      <div>
+        <FavoriteButton
+          isFavorite={isFavorite}
+          onToggleFavorite={() => onToggleFavorite(artPiece.slug)}
+        />
+      </div>
     </div>
   );
 }

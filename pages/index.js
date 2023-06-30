@@ -1,14 +1,38 @@
 import useSWR from "swr";
-import ArtPieces from "@/components/ArtPieces";
+import Spotlight from "@/components/Spotlight";
+import { useEffect, useState } from "react";
 
-export default function HomePage() {
-  const { data } = useSWR("https://example-apis.vercel.app/api/art");
+export default function SpotlightPage({
+  artPieces,
+  artPiecesInfo,
+  onToggleFavorite,
+}) {
+  const [randomArtPiece, setRandomArtPiece] = useState();
+  
+  useEffect(() => {
+    if (artPieces && artPieces.length > 0) {
+      setRandomArtPiece(
+        artPieces[Math.floor(Math.random() * artPieces.length)]
+      );
+    }
+  }, [artPieces]);
 
-  if (!data) return <div>Loading...</div>;
+  if (!randomArtPiece) return <div>Loading...</div>;
+
+  const additionalInfo = artPiecesInfo.find(
+    (artPieceInfo) => artPieceInfo.slug === randomArtPiece.slug
+  ) ?? { isFavorite: false };
 
   return (
     <div>
-      <ArtPieces artPieces={data} />
+      <Spotlight
+        image={randomArtPiece.imageSource}
+        name={randomArtPiece.name}
+        artist={randomArtPiece.artist}
+        slug={randomArtPiece.slug}
+        isFavorite={additionalInfo.isFavorite}
+        onToggleFavorite={onToggleFavorite}
+      />
     </div>
-  );
-}
+  )
+  }
